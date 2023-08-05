@@ -21,6 +21,7 @@ namespace ContactBook.DTO
         [Required(ErrorMessage = "Phone number is required.")]
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string PhoneNumber { get; set; }
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
+
     }
 }

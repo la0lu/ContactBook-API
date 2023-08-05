@@ -5,7 +5,7 @@ namespace ContactBook.Services
 {
     public interface IAuthService
     {
-        string GeneratejWT(AppUser user);
+        string GeneratejWT(AppUser user, IList<string> roles);
 
         Task<SignInResult> Login(AppUser user, string password);
     }

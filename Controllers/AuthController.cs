@@ -21,14 +21,6 @@ namespace ContactBook.Controllers
         }
 
 
-        //[HttpGet("get-token")] 
-        //public IActionResult GetToken()
-        //{
-        //  var token =  _authService.GeneratejWT();
-
-        //    return Ok(token);
-        //}
-
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser([FromBody]LoginDto model) 
         {
@@ -51,7 +43,8 @@ namespace ContactBook.Controllers
                             UserName = user.UserName,
                         };
 
-                        var token = _authService.GeneratejWT(user);
+                        var userroles = await _userManager.GetRolesAsync(user);
+                        var token = _authService.GeneratejWT(user, userroles);
 
                         return Ok(new { user = userToReturn, token = token });
                     }

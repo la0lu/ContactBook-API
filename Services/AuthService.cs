@@ -17,13 +17,17 @@ namespace ContactBook.Services
             _signInManager = signInManager;
         }
 
-        public string GeneratejWT(AppUser user)
+        public string GeneratejWT(AppUser user, IList<string> roles)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
             claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
+            foreach(var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var JwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
