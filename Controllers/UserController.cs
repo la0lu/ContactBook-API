@@ -4,6 +4,7 @@ using ContactBook.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ContactBook.Controllers
 {
@@ -187,5 +188,23 @@ namespace ContactBook.Controllers
             var userRoles = await _userManager.GetRolesAsync(user);
             return Ok(userRoles);
         }
+
+        [Authorize(Roles ="admin")]
+        [HttpPost("add-claim-to-user")]
+        public async Task<IActionResult> AddClaimsToUser([FromBody]AddUserClaims model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+
+                var claimList = new List<Claim>();
+
+                foreach(var item in model.)
+            }
+
+            return BadRequest(ModelState);
+        }
+
     }
+
 }
