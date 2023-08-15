@@ -4,8 +4,6 @@ namespace ContactBook.DTO
 {
     public class UpdateContactDto
     {
-        //public int Id { get; set; }
-
         [Required(ErrorMessage = "First name is required.")]
         [StringLength(20, MinimumLength = 2, ErrorMessage = "First name should be between 2 and 20 characters.")]
         public string FirstName { get; set; } 

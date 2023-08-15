@@ -2,11 +2,11 @@
 
 namespace ContactBook.DTO
 {
-    public class AddUserClaims
+    public class AddUserClaimsDto
     {
         [Required]
         public string UserId { get; set; } = "";
         [Required]
-        public Dictionary<string, bool> ClaimsToAdd { get; set; } = new Dictionary<string, bool>();
+        public Dictionary<string, string> ClaimsToAdd { get; set; } = new Dictionary<string, string>();
     }
 }

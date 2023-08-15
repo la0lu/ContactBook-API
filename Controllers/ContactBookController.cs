@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContactBook.Controllers
 {
-    [Authorize]
-    [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("[Controller]")]
     public class ContactBookController : Controller
     {
@@ -18,6 +17,8 @@ namespace ContactBook.Controllers
             _repo = repo;
         }
 
+        [Authorize(Roles = "admin")]  //must be logged in, must also be an admin
+        [Authorize(Policy = "CanAdd")]
         [HttpPost("add")]
         public IActionResult AddNewContact([FromBody] AddContactDto model)
         {

@@ -80,6 +80,11 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<ContactBookContext>();                      //with this we have access to roleManager, userManager, and SigninManager
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CanAdd", policy => policy.RequireClaim("CanAdd", new List<string> { "true" }));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

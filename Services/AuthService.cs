@@ -17,7 +17,7 @@ namespace ContactBook.Services
             _signInManager = signInManager;
         }
 
-        public string GeneratejWT(AppUser user, IList<string> roles)
+        public string GeneratejWT(AppUser user, IList<string> roles, IList<Claim> userclaims)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
@@ -27,6 +27,11 @@ namespace ContactBook.Services
             foreach(var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            foreach(var claim in userclaims)
+            {
+                claims.Add(new Claim(claim.Type, claim.Value));
             }
 
             var JwtSecurityTokenHandler = new JwtSecurityTokenHandler();

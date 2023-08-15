@@ -24,6 +24,12 @@ namespace ContactBook.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser([FromBody]LoginDto model) 
         {
+            var response = new ResponseObject<object, object>();
+            response.Code = 400;
+            response.Status = false;
+            response.Message = "Failed";
+            response.Data = null;
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -44,21 +50,33 @@ namespace ContactBook.Controllers
                         };
 
                         var userroles = await _userManager.GetRolesAsync(user);
-                        var token = _authService.GeneratejWT(user, userroles);
+                        var userclaims = await _userManager.GetClaimsAsync(user);
 
-                        return Ok(new { user = userToReturn, token = token });
+                        var token = _authService.GeneratejWT(user, userroles, userclaims);
+                        
+                        response.Code = 200;
+                        response.Status = true;
+                        response.Message = "Successful";
+                        response.Data = new { user = userToReturn, token = token };
+
+                        return Ok(response);
+
+                        
+
                     }
 
-                    ModelState.AddModelError("Password", "invalid Credentials");
+                    response.Errors = "Invalid Credential";
 
-                    return BadRequest(ModelState);
+                    return BadRequest(response);
                 }
 
-                return BadRequest("Invalid Credentials");
-                
-            }
+                response.Errors = "Invalid Credential";
 
-            return BadRequest(ModelState);
+                return BadRequest(response);
+
+            }
+            response.Errors = ModelState;
+            return BadRequest(response);
             
 
         }

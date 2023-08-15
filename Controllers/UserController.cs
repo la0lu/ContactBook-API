@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace ContactBook.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("[Controller]")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class UserController : ControllerBase
     {
@@ -107,7 +107,7 @@ namespace ContactBook.Controllers
             return Ok(usersToReturn);
         }
 
-
+        [Authorize(Roles = "regular")]
         [HttpGet("single/{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
@@ -189,17 +189,46 @@ namespace ContactBook.Controllers
             return Ok(userRoles);
         }
 
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost("add-claim-to-user")]
-        public async Task<IActionResult> AddClaimsToUser([FromBody]AddUserClaims model)
+        public async Task<IActionResult> AddClaimsToUser([FromBody]AddUserClaimsDto model)
         {
             if (ModelState.IsValid)
             {
+
+                //var loggedInUser = await _userManager.FindByNameAsync(User?.Identity?.Name);
+                //if (loggedInUser != null && loggedInUser.Id != model.UserId)
+                //{
+
+
+                //}
+
+                //return BadRequest($"Loggedin is denied from assigning claims to self");
                 var user = await _userManager.FindByIdAsync(model.UserId);
 
                 var claimList = new List<Claim>();
 
-                foreach(var item in model.)
+                foreach (var item in model.ClaimsToAdd)
+                {
+                    claimList.Add(new Claim(item.Key, item.Value));
+                }
+
+                if (user != null)
+                {
+                    var result = await _userManager.AddClaimsAsync(user, claimList);
+                    if (result.Succeeded)
+                    {
+                        return Ok("Claims added to user.");
+                    }
+
+                    foreach (var err in result.Errors)
+                    {
+                        ModelState.AddModelError(err.Code, err.Description);
+                    }
+                    return BadRequest(ModelState);
+
+                }
+                return BadRequest($"User with id {model.UserId} was not found!");
             }
 
             return BadRequest(ModelState);
