@@ -1,6 +1,7 @@
 ﻿using ContactBook.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ContactBook.Data
 {
@@ -11,5 +12,8 @@ namespace ContactBook.Data
         }
 
         public DbSet<Contact> Contacts { get; set; }
+
+
+      
     }
 }

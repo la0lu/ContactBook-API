@@ -15,7 +15,7 @@ namespace ContactBook.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
 
-
+ 
         public UserController(UserManager<AppUser> userManager)
         {
             _userManager = userManager;

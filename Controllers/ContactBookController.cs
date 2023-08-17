@@ -1,6 +1,7 @@
 ﻿using ContactBook.Data.Entities;
 using ContactBook.Data.Repository;
 using ContactBook.DTO;
+using ContactBook.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,8 +44,11 @@ namespace ContactBook.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-all")]
-        public IActionResult GetAllContacts()
+        public IActionResult GetAllContacts([FromQuery] Paginator filter)
         {
+            var paginator = new Paginator(filter.per_page, filter.current_Page);
+
+
             var contacts = _repo.GetAllContacts();
             if (contacts == null || contacts.Count == 0)
                 return BadRequest("no contacts found");
@@ -59,7 +63,8 @@ namespace ContactBook.Controllers
                 Address = x.Address,
             });
 
-            return Ok(result);
+            return Ok(result.Skip((paginator.current_Page - 1) * paginator.per_page)
+                .Take(paginator.per_page).ToArray());
         }
 
         [AllowAnonymous]
